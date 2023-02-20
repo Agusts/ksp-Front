@@ -1,0 +1,176 @@
+<div class="row justify-content-end">
+  <div class="col-4 d-flex justify-content-end mb-2">
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary mx-2"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal"
+    >
+      Agregar Empleado
+    </button>
+    <button
+      class="btn btn-success"
+      (click)="exportToExcel()"
+      [disabled]="empleados.length == 0"
+    >
+      Exportar a Excel
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    [ngClass]="oculto"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Nuevo Empleado
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <form
+          id="registerForm"
+          [formGroup]="registerForm"
+          (ngSubmit)="crearEmpleado()"
+        >
+          <div class="row modal-body">
+            <div class="col-md-12 mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nombre"
+                formControlName="nombre"
+              />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="puesto" class="form-label">Puesto</label>
+              <input
+                type="text"
+                class="form-control"
+                id="puesto"
+                formControlName="puesto"
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="salario" class="form-label">Salario</label>
+              <input
+                type="number"
+                class="form-control"
+                id="salario"
+                min="0"
+                formControlName="salario"
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="fecha" class="form-label"
+                >Fecha de Contratación</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="fecha"
+                formControlName="fechaCont"
+              />
+            </div>
+            <div class="col-md-12 mb-3">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="status"
+                formControlName="status"
+              />
+              <label class="form-check-label ps-2" for="status">Activo</label>
+            </div>
+            <div class="row">
+              <div class="col text-danger">
+                <p *ngIf="campoNovalido('nombre')">El nombre es obligatorio</p>
+                <p *ngIf="campoNovalido('puesto')">El puesto es obligatorio</p>
+                <p *ngIf="campoNovalido('salario')">
+                  El salario es obligatorio
+                </p>
+                <p *ngIf="campoNovalido('fechaCont')">
+                  La fecha de contratación es obligatoria
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button
+              type="submit"
+              [disabled]="registerForm.invalid"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+            >
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <!-- Table -->
+
+  <div class="col-12">
+    <table class="table" id="table-empleados">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Puesto</th>
+          <th>Salario</th>
+          <th>Fecha de Contratación</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let empleado of empleados">
+          <td>{{ empleado.nombre }}</td>
+          <td>{{ empleado.puesto }}</td>
+          <td>{{ empleado.salario }}</td>
+          <td>{{ empleado.fechaCont }}</td>
+          <td *ngIf="empleado.status">Activo</td>
+          <td *ngIf="!empleado.status">Inactivo</td>
+          <td>
+            <div class="d-flex justify-content-end pe-5">
+              <img
+                class="me-2"
+                src="../../../assets/icons/lapiz.png"
+                alt=""
+                width="15"
+                [routerLink]="['/edit', empleado._id]"
+              />
+              <img
+                src="../../../assets/icons/basura.png"
+                alt=""
+                width="15"
+                (click)="borrarEmpleado(empleado)"
+              />
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Table -->
+</div>
